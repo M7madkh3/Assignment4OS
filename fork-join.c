@@ -1,18 +1,28 @@
-#include <stdio.h>      // For printf
-#include <stdlib.h>     // For exit
-#include <semaphore.h>  // For sem_t, sem_wait, sem_post
-#include <pthread.h>    // For pthread functions (if threads are used)
+#include <stdio.h>
+#include <stdlib.h>
+#include <semaphore.h>
+#include <pthread.h>
+#include <unistd.h>
+
 sem_t s;
 
+void *child(void *arg) {
+    printf("Child\n");
+    sleep(1);  // Simulate some work
+    sem_post(&s);  // Signal that the child is done
+    return NULL;
+}
+
 int main() {
-    sem_init(&s, 0, 0);
-    
-    if (fork() == 0) {
-        printf("Child\n");
-        sem_post(&s);
-        exit(0);
-    } else {
-        sem_wait(&s);
-        printf("Parent\n");
-    }
+    sem_init(&s, 0, 0);  // Initialize semaphore to 0
+
+    pthread_t c;
+    pthread_create(&c, NULL, child, NULL);
+
+    sem_wait(&s);  // Wait for the child to finish
+    printf("Parent\n");
+
+    pthread_join(c, NULL);
+    sem_destroy(&s);  // Clean up the semaphore
+    return 0;
 }
