@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <semaphore.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #define N 5  // Number of philosophers
 
@@ -45,5 +46,5 @@ int main() {
     for (int i = 0; i < N; i++) sem_destroy(&forks[i]);
     sem_destroy(&waiter);
 
-    return 0;
+    return 0;
 }

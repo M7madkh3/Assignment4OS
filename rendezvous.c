@@ -34,5 +34,5 @@ int main() {
 
     sem_destroy(&aArrived);  // Clean up semaphores
     sem_destroy(&bArrived);
-    return 0;
+    return 0;
 }

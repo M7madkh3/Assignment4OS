@@ -5,10 +5,10 @@ CC = gcc
 CFLAGS = -Wall -pthread
 
 # Source files
-SOURCES = fork-join.c rendezvous.c barrier.c reader-writer.c reader-writer-nostarve.c mutex-nostarve.c
+SOURCES = fork-join.c rendezvous.c barrier.c reader-writer.c reader-writer-nostarve.c mutex-nostarve.c dining-philosophers.c
 
 # Executables
-EXECUTABLES = fork-join rendezvous barrier reader-writer reader-writer-nostarve mutex-nostarve
+EXECUTABLES = fork-join rendezvous barrier reader-writer reader-writer-nostarve mutex-nostarve dining-philosophers
 
 # Default target: Compile all programs
 all: $(EXECUTABLES)

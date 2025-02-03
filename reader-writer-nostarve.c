@@ -1,4 +1,3 @@
-Reader-Writer Problem (No Starvation) (reader-writer-nostarve.c):
 #include <stdio.h>
 #include <semaphore.h>
 #include <pthread.h>
