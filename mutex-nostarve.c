@@ -9,23 +9,22 @@ int waiting = 0;
 
 void lock() {
     sem_wait(&mutex);
+    waiting++;
+    sem_post(&mutex);
+
+    sem_wait(&block);  // Wait until granted access
+}
+
+void unlock() {
+    sem_wait(&mutex);
+    waiting--;
     if (waiting > 0) {
-        waiting++;
-        sem_post(&mutex);
-        sem_wait(&block);
+        sem_post(&block);  // Grant access to next waiting thread
     } else {
         sem_post(&mutex);
     }
 }
 
-void unlock() {
-    sem_wait(&mutex);
-    if (waiting > 0) {
-        sem_post(&block);
-    } else {
-        sem_post(&mutex);
-    }
-}
 
 int main() {
     sem_init(&mutex, 0, 1);  // Initialize semaphores

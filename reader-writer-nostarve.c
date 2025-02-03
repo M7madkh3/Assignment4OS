@@ -12,15 +12,18 @@ int waiting_writers = 0;
 int writing = 0;
 
 void *reader(void *arg) {
-    sem_wait(&write_mutex);  // Prevent writer starvation
     sem_wait(&mutex);
+    while (waiting_writers > 0) {  // Ensure readers do not starve writers
+        sem_post(&mutex);
+        sem_wait(&rw_mutex);  // Wait for writers to finish
+        sem_wait(&mutex);
+    }
     readers++;
     if (readers == 1) sem_wait(&rw_mutex);  // First reader locks writers
     sem_post(&mutex);
-    sem_post(&write_mutex);
 
     printf("Reader is reading\n");
-    sleep(1);  // Simulate reading
+    sleep(1);
 
     sem_wait(&mutex);
     readers--;
@@ -30,12 +33,19 @@ void *reader(void *arg) {
 }
 
 void *writer(void *arg) {
-    sem_wait(&write_mutex);
-    sem_wait(&rw_mutex);
+    sem_wait(&mutex);
+    waiting_writers++;  // Indicate a writer is waiting
+    sem_post(&mutex);
+
+    sem_wait(&rw_mutex);  // Writers wait for readers
     printf("Writer is writing\n");
-    sleep(1);  // Simulate writing
+    sleep(1);
+
+    sem_wait(&mutex);
+    waiting_writers--;  // Done writing
+    sem_post(&mutex);
+    
     sem_post(&rw_mutex);
-    sem_post(&write_mutex);
     return NULL;
 }
 

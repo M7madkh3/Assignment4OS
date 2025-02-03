@@ -13,18 +13,18 @@ void *worker(void *arg) {
 
     sem_wait(&mutex);
     count++;
+    if (count == N) {
+        sem_post(&barrier);  // Release one thread
+    }
     sem_post(&mutex);
 
-    if (count == N) {
-        sem_post(&barrier);  // Signal that all threads have reached the barrier
-    }
-
     sem_wait(&barrier);
-    sem_post(&barrier);  // Allow other threads to proceed
+    sem_post(&barrier);  // Allow all threads to proceed
 
     printf("After barrier\n");
     return NULL;
 }
+
 
 int main() {
     sem_init(&mutex, 0, 1);   // Initialize mutex semaphore
