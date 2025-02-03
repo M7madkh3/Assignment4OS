@@ -32,6 +32,9 @@ reader-writer-nostarve: reader-writer-nostarve.c
 mutex-nostarve: mutex-nostarve.c
 	$(CC) $(CFLAGS) -o mutex-nostarve mutex-nostarve.c
 
+dining-philosophers: dining-philosophers.c
+	$(CC) $(CFLAGS) -o dining-philosophers dining-philosophers.c
+
 # Clean up compiled files
 clean:
 	rm -f $(EXECUTABLES)
