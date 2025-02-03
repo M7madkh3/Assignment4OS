@@ -1,9 +1,10 @@
-#include <stdio.h>      // For printf
-#include <stdlib.h>     // For exit
-#include <semaphore.h>  // For sem_t, sem_wait, sem_post
-#include <pthread.h>    // For pthread functions (if threads are used)
-sem_t mutex = 1;
-sem_t block = 0;
+No-Starve Mutex (mutex-nostarve.c):
+#include <stdio.h>
+#include <semaphore.h>
+#include <pthread.h>
+
+sem_t mutex;
+sem_t block;
 int waiting = 0;
 
 void lock() {
@@ -13,7 +14,7 @@ void lock() {
         sem_post(&mutex);
         sem_wait(&block);
     } else {
-        // Acquire lock
+        sem_post(&mutex);
     }
 }
 
@@ -24,4 +25,18 @@ void unlock() {
     } else {
         sem_post(&mutex);
     }
+}
+
+int main() {
+    sem_init(&mutex, 0, 1);  // Initialize semaphores
+    sem_init(&block, 0, 0);
+
+    // Test lock and unlock here
+    lock();
+    printf("Critical Section\n");
+    unlock();
+
+    sem_destroy(&mutex);
+    sem_destroy(&block);
+    return 0;
 }
